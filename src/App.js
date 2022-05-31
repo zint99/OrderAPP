@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import FilterMeals from './components/FilterMeals/FilterMeals';
 import Meals from './components/Meals/Meals'
 import CartContext from './store/CartContext'
 
@@ -96,8 +97,14 @@ export default function App() {
         //更新carData
         setCartData(newCartData)
     }
+    const filterHandler = (keyword) => {
+        //根据filter过滤数据
+        const newMealsData = MEALS_DATA.filter(meal => meal.title.search(keyword) !== -1)
+        setMealsData(newMealsData)
+    }
     return (
-        <CartContext.Provider value={{addMealHandler,subMealHandler}}>
+        <CartContext.Provider value={{ addMealHandler, subMealHandler }}>
+            <FilterMeals onFilt={filterHandler} />
             <Meals
                 mealsData={mealsData}
             />
