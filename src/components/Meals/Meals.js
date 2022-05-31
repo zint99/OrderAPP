@@ -4,7 +4,12 @@ import MealsCss from './Meals.module.css'
 
 export default function Meals(props) {
     const { mealsData } = props
-    const meals = mealsData.map(meal => <Meal key={meal.id} {...meal} />)
+    const meals = mealsData.map(meal => <Meal
+        key={meal.id}
+        meal={meal}
+        onAdd={props.onAdd}
+        onSub={props.onSub}
+    />)
     return (
         /*
             滚动条设置给Meals自身

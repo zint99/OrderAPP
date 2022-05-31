@@ -3,7 +3,7 @@ import Counter from '../../UI/Counter/Counter'
 import MealCss from './Meal.module.css'
 
 export default function Meal(props) {
-    const { title, desc, price, img } = props
+    const { title, desc, price, img } = props.meal
     return (
         <div className={MealCss.Meal}>
             <div className={MealCss.ImgBox}>
@@ -14,7 +14,11 @@ export default function Meal(props) {
                 <p className={MealCss.Desc}>{desc}</p>
                 <div className={MealCss.PriceWrapper}>
                     <span className={MealCss.Price}>{price}</span>
-                    <Counter amount={props.amount} />
+                    <Counter
+                        meal={props.meal}
+                        onAdd={props.onAdd}
+                        onSub={props.onSub}
+                    />
                 </div>
             </div>
         </div>

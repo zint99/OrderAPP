@@ -53,10 +53,55 @@ const MEALS_DATA = [
 
 export default function App() {
     const [mealsData, setMealsData] = useState(MEALS_DATA)
-
+    const [cartData, setCartData] = useState({
+        //商品
+        items: [],
+        //总数量
+        totalAmount: 0,
+        //总价
+        totalPrice: 0
+    })
+    const addMealHandler = (meal) => {
+        //复制cartData
+        const newCartData = { ...cartData }
+        //如果购物车中还未添加该商品
+        if (!newCartData.items.find(item => item === meal)) {
+            newCartData.items.push(meal)
+            //初始化商品amount属性
+            meal.amount = 1
+        } else {
+            //不用重复将商品Push进items,总数加1就ok
+            meal.amount += 1
+        }
+        //更新总价和总数
+        newCartData.totalAmount += 1
+        newCartData.totalPrice += meal.price
+        //更新carData
+        setCartData(newCartData)
+    }
+    const subMealHandler = (meal) => {
+        //复制cartData
+        const newCartData = { ...cartData }
+        //首先items中肯定存在此meal。点击一次就meal.amount减一
+        if (meal.amount !== 0) {
+            meal.amount -= 1
+        } else {
+            //直到meal.amount为0才将其从items中删除
+            newCartData.items.splice(newCartData.items.findIndex(item => item === meal), 1)
+        }
+        //更新总价和总数
+        newCartData.totalAmount -= 1
+        newCartData.totalPrice -= meal.price
+        //更新carData
+        setCartData(newCartData)
+    }
     return (
         <>
-            <Meals mealsData={mealsData} />
+            <Meals
+                mealsData={mealsData}
+                onAdd={addMealHandler}
+                onSub={subMealHandler}
+            />
         </>
     )
 }
