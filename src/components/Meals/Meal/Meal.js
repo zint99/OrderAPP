@@ -16,8 +16,6 @@ export default function Meal(props) {
                     <span className={MealCss.Price}>{price}</span>
                     <Counter
                         meal={props.meal}
-                        onAdd={props.onAdd}
-                        onSub={props.onSub}
                     />
                 </div>
             </div>

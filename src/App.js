@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Meals from './components/Meals/Meals'
+import CartContext from './store/CartContext'
 
 
 // 模拟一组食物数据
@@ -96,12 +97,10 @@ export default function App() {
         setCartData(newCartData)
     }
     return (
-        <>
+        <CartContext.Provider value={{addMealHandler,subMealHandler}}>
             <Meals
                 mealsData={mealsData}
-                onAdd={addMealHandler}
-                onSub={subMealHandler}
             />
-        </>
+        </CartContext.Provider>
     )
 }

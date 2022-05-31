@@ -7,8 +7,6 @@ export default function Meals(props) {
     const meals = mealsData.map(meal => <Meal
         key={meal.id}
         meal={meal}
-        onAdd={props.onAdd}
-        onSub={props.onSub}
     />)
     return (
         /*

@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import CartContext from '../../../store/CartContext'
 import CounterCss from './Counter.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 export default function Counter(props) {
+    const { addMealHandler: onAdd, subMealHandler: onSub } = useContext(CartContext)
     const addButtonHandler = () => {
-        props.onAdd(props.meal)
+        onAdd(props.meal)
     }
     const subButtonHandler = () => {
-        props.onSub(props.meal)
+        onSub(props.meal)
     }
     return (
         <div className={CounterCss.Counter}>
