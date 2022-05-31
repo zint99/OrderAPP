@@ -19,4 +19,4 @@
   3.Cart组件
   
   - 将购物车数据提升至App组件
-    - 完成addMealHandler和subMealHandler -> 第一次使用一层层传递属性。App -> Meals -> Ｍeal -> Counter
+    - 完成addMealHandler和subMealHandler -> 第一次使用一层层传递属性(很恶心，App中的两个函数只有Counter要使用，但是经过两个中间组件进行传递，对两个中间组件这个函数是没有作用的)。App -> Meals -> Ｍeal -> Counter
