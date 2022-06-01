@@ -14,7 +14,7 @@
     line-height: 36rem;
     background-color: #fcbf49;
     border-radius: 50%;
-    font-size: 14px;
+    font-size: 28rem;
     padding: 0;
 
 }
@@ -25,6 +25,6 @@
 }
 
 .Count {
-    font-size: 12px;
+    font-size: 24rem;
     margin: 0 5px;
 }

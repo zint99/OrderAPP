@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Cart from './components/Cart/Cart';
 import FilterMeals from './components/FilterMeals/FilterMeals';
 import Meals from './components/Meals/Meals'
 import CartContext from './store/CartContext'
@@ -85,9 +86,8 @@ export default function App() {
         //复制cartData
         const newCartData = { ...cartData }
         //首先items中肯定存在此meal。点击一次就meal.amount减一
-        if (meal.amount !== 0) {
-            meal.amount -= 1
-        } else {
+        meal.amount -= 1
+        if (meal.amount === 0) {
             //直到meal.amount为0才将其从items中删除
             newCartData.items.splice(newCartData.items.findIndex(item => item === meal), 1)
         }
@@ -102,12 +102,24 @@ export default function App() {
         const newMealsData = MEALS_DATA.filter(meal => meal.title.search(keyword) !== -1)
         setMealsData(newMealsData)
     }
+    const clearCartHandler = (toggleDetails) => {
+        //清空购物车函数，CartDetail使用
+        if (!window.confirm("你确定清空商品吗？")) return
+        const newCartData = Object.assign({}, cartData)
+        newCartData.items.forEach(meal => meal.amount = 0)
+        newCartData.items.length = 0
+        newCartData.totalAmount = 0
+        newCartData.totalPrice = 0
+        toggleDetails()
+        setCartData(newCartData)
+    }
     return (
-        <CartContext.Provider value={{ addMealHandler, subMealHandler }}>
+        <CartContext.Provider value={{ addMealHandler, subMealHandler, clearCartHandler, totalAmount: cartData.totalAmount, totalPrice: cartData.totalPrice, cartData }}>
             <FilterMeals onFilt={filterHandler} />
             <Meals
                 mealsData={mealsData}
             />
+            <Cart />
         </CartContext.Provider>
     )
 }

@@ -9,9 +9,9 @@ export default function Meal(props) {
             <div className={MealCss.ImgBox}>
                 <img src={img} />
             </div>
-            <div>
+            <div className={MealCss.DescBox}>
                 <h2 className={MealCss.Title}>{title}</h2>
-                <p className={MealCss.Desc}>{desc}</p>
+                {props.NoDesc ? null : <p className={MealCss.Desc}>{desc}</p>}
                 <div className={MealCss.PriceWrapper}>
                     <span className={MealCss.Price}>{price}</span>
                     <Counter
