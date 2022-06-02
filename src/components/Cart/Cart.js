@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import classes from './Cart.module.css'
 import iconImg from '../../assets/bag.png'
 import CartContext from '../../store/CartContext'
@@ -14,13 +14,25 @@ export default function Cart() {
         setShowDeatail(showDeatail => !showDeatail)
     }
     const toggleCheckout = () => {
+        //小bug -> 当cartData.totalAmount为0时退出不了
         if (cartData.totalAmount === 0) return;
         setShowCheckout(showCheckout => !showCheckout)
     }
+    useEffect(() => {
+        if (cartData.totalAmount === 0) {
+            setShowDeatail(false)
+            setShowCheckout(false)
+        }
+    }, [cartData.totalAmount])
 
     return (
         <div className={classes.Cart} onClick={toggleDetails}>
-            {showDeatail && cartData.totalAmount ? <CartDetails toggleDetails={toggleDetails} /> : null}
+            {/* 
+                使用数量判断有个小bug，关闭detail后再添加商品detail会突然又出现
+                每当购物车重新渲染->CartData更新就去检查totalAmount，如果为0直接设置setShowDeatail(false)
+                    -> 注意不能在if语句中用hook -> 会造成死循环
+            */}
+            {showDeatail && <CartDetails toggleDetails={toggleDetails} />}
             {showCheckout && <Checkout toggleCheckout={toggleCheckout} />}
             <div className={classes.Icon} >
                 <img src={iconImg} />

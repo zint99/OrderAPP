@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import ReactDOM from 'react-dom'
+import Bar from './Bar/Bar'
 import classes from './Checkout.module.css'
 import CartContext from '../../../store/CartContext'
 import CheckoutItem from './CheckoutItem/CheckoutItem'
@@ -20,6 +21,7 @@ export default function Checkout(props) {
                     <p className={classes.TotalPrice}>{cartData.totalPrice}</p>
                 </footer>
             </div>
+            <Bar totalPrice={cartData.totalPrice} />
         </div>
     ), document.getElementById('checkout-root'))
 }

@@ -116,9 +116,7 @@ export default function App() {
     return (
         <CartContext.Provider value={{ addMealHandler, subMealHandler, clearCartHandler, totalAmount: cartData.totalAmount, totalPrice: cartData.totalPrice, cartData }}>
             <FilterMeals onFilt={filterHandler} />
-            <Meals
-                mealsData={mealsData}
-            />
+            <Meals mealsData={mealsData} />
             <Cart />
         </CartContext.Provider>
     )
