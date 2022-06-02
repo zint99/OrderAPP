@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useReducer } from 'react'
 import Cart from './components/Cart/Cart';
 import FilterMeals from './components/FilterMeals/FilterMeals';
 import Meals from './components/Meals/Meals'
 import CartContext from './store/CartContext'
-
 
 // 模拟一组食物数据
 const MEALS_DATA = [
@@ -54,67 +53,63 @@ const MEALS_DATA = [
     }
 ];
 
+const cartReducer = (cartData, action) => {
+    //严格模式会导致dispatch两次
+    //复制cartData
+    const newCartData = { ...cartData }
+    const { payload: meal } = action
+    switch (action.type) {
+        case "ADD":
+            //如果购物车中还未添加该商品
+            if (!newCartData.items.find(item => item === meal)) {
+                newCartData.items.push(meal)
+                //初始化商品amount属性
+                meal.amount = 1
+            } else {
+                //不用重复将商品Push进items,总数加1就ok
+                meal.amount += 1
+            }
+            //更新总价和总数
+            newCartData.totalAmount += 1
+            newCartData.totalPrice += meal.price
+            //更新carData
+            return newCartData
+        case "SUB":
+            //首先items中肯定存在此meal。点击一次就meal.amount减一
+            meal.amount -= 1
+            if (meal.amount === 0) {
+                //直到meal.amount为0才将其从items中删除
+                newCartData.items.splice(newCartData.items.findIndex(item => item === meal), 1)
+            }
+            //更新总价和总数
+            newCartData.totalAmount -= 1
+            newCartData.totalPrice -= meal.price
+            //更新carData
+            return newCartData
+        case "CLEAR":
+            //清空购物车函数，CartDetail使用
+            if (!window.confirm("你确定清空商品吗？")) return
+            newCartData.items.forEach(meal => meal.amount = 0)
+            newCartData.items.length = 0
+            newCartData.totalAmount = 0
+            newCartData.totalPrice = 0
+            return newCartData
+        default:
+            return cartData
+    }
+}
+
+
 export default function App() {
     const [mealsData, setMealsData] = useState(MEALS_DATA)
-    const [cartData, setCartData] = useState({
-        //商品
-        items: [],
-        //总数量
-        totalAmount: 0,
-        //总价
-        totalPrice: 0
-    })
-    const addMealHandler = (meal) => {
-        //复制cartData
-        const newCartData = { ...cartData }
-        //如果购物车中还未添加该商品
-        if (!newCartData.items.find(item => item === meal)) {
-            newCartData.items.push(meal)
-            //初始化商品amount属性
-            meal.amount = 1
-        } else {
-            //不用重复将商品Push进items,总数加1就ok
-            meal.amount += 1
-        }
-        //更新总价和总数
-        newCartData.totalAmount += 1
-        newCartData.totalPrice += meal.price
-        //更新carData
-        setCartData(newCartData)
-    }
-    const subMealHandler = (meal) => {
-        //复制cartData
-        const newCartData = { ...cartData }
-        //首先items中肯定存在此meal。点击一次就meal.amount减一
-        meal.amount -= 1
-        if (meal.amount === 0) {
-            //直到meal.amount为0才将其从items中删除
-            newCartData.items.splice(newCartData.items.findIndex(item => item === meal), 1)
-        }
-        //更新总价和总数
-        newCartData.totalAmount -= 1
-        newCartData.totalPrice -= meal.price
-        //更新carData
-        setCartData(newCartData)
-    }
+    const [cartData, cartDispatch] = useReducer(cartReducer, { items: [], totalAmount: 0, totalPrice: 0 })
     const filterHandler = (keyword) => {
         //根据filter过滤数据
         const newMealsData = MEALS_DATA.filter(meal => meal.title.search(keyword) !== -1)
         setMealsData(newMealsData)
     }
-    const clearCartHandler = (toggleDetails) => {
-        //清空购物车函数，CartDetail使用
-        if (!window.confirm("你确定清空商品吗？")) return
-        const newCartData = Object.assign({}, cartData)
-        newCartData.items.forEach(meal => meal.amount = 0)
-        newCartData.items.length = 0
-        newCartData.totalAmount = 0
-        newCartData.totalPrice = 0
-        toggleDetails()
-        setCartData(newCartData)
-    }
     return (
-        <CartContext.Provider value={{ addMealHandler, subMealHandler, clearCartHandler, totalAmount: cartData.totalAmount, totalPrice: cartData.totalPrice, cartData }}>
+        <CartContext.Provider value={{ cartDispatch, cartData }}>
             <FilterMeals onFilt={filterHandler} />
             <Meals mealsData={mealsData} />
             <Cart />

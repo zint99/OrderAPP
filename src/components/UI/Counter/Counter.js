@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 export default function Counter(props) {
-    const { addMealHandler: onAdd, subMealHandler: onSub } = useContext(CartContext)
+    const { cartDispatch } = useContext(CartContext)
     const addButtonHandler = () => {
-        onAdd(props.meal)
+        cartDispatch({ type: "ADD", payload: props.meal })
     }
     const subButtonHandler = () => {
-        onSub(props.meal)
+        cartDispatch({ type: "SUB", payload: props.meal })
     }
     return (
         <div className={CounterCss.Counter}>
